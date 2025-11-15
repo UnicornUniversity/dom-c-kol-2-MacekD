@@ -11,25 +11,59 @@
  * @returns {string} containing number converted to output system
  */
 export function main(inputNumber, inputNumberSystem, outputNumberSystem) {
-  //TODO code
-  //let dtoOut = exMain(inputNumber, inputNumberSystem, outputNumberSystem);
+  if (!permittedInputSystems().includes(inputNumberSystem) || 
+    !permittedOutputSystems().includes(outputNumberSystem)) {
+    throw "InvalidNumberSystem"
+  }
+
+  if (inputNumberSystem == outputNumberSystem){
+    return inputNumber;
+  }
+
+  let dtoOut;
+  if (inputNumberSystem == 2){
+    if (outputNumberSystem == 10) {
+      dtoOut = fromBinaryToDecimal(inputNumber);
+    }
+  } else if (inputNumberSystem == 10){
+    if (outputNumberSystem == 2) {
+      dtoOut = fromDecimalToBinary(inputNumber);
+    }
+  }
+
   return dtoOut;
 }
 
-/**
- * TODO - Change this to contain all input number systems that your application can convert from.
- * Function which returns which number systems are permitted on input.
- * @returns {Array} array of numbers refering to permitted input systems
- */
+function fromDecimalToBinary(decimalNumber){
+  decimalNumber = Number(decimalNumber);
+  let inBinarSystemNumberValue = "";
+  for (let i = decimalNumber; i > 0; i = Math.floor(i/2)) {
+    inBinarSystemNumberValue = (i % 2 ? "1" : "0") + inBinarSystemNumberValue;
+  }
+
+  return inBinarSystemNumberValue || "0";
+}
+
+function fromBinaryToDecimal(binaryNumber) {
+  binaryNumber = binaryNumber.replace(/^0+/, '');
+  let inDecimalSystemValue = 0n;
+
+  for (let i = 0; i < binaryNumber.length; i++) {
+    let bit = binaryNumber[binaryNumber.length - 1 - i];
+    if (bit === '1') {
+      //inDecimalSystemValue += Math.pow(2, i);
+      inDecimalSystemValue += 1n << BigInt(i);
+    }
+  }
+
+  return inDecimalSystemValue.toString();
+}
+
 export function permittedInputSystems() {
 	return [10, 2];
 }
 
-/**
- * TODO - Change this to contain all output number systems that your application can convert to.
- * Function which returns which number systems are permitted on output.
- * @returns {Array} array of numbers refering to permitted output systems
- */
 export function permittedOutputSystems() {
 	return [10, 2];
 }
+
